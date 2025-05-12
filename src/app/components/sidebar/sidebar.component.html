@@ -1,0 +1,25 @@
+<aside class="bg-gray-900 text-white w-64 p-4 h-full hidden md:block">
+    <nav>
+      <ul class="space-y-2">
+        <li>
+          <a routerLink="/" class="flex items-center space-x-2 hover:text-green-500">
+            <img src="/home.svg" class="h-6 w-6" />
+            <span>Home</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/search" class="flex items-center space-x-2 hover:text-green-500" (click)="myPlaylists()">
+            <img src="/search.svg" class="h-6 w-6" />
+            <span>Search</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/library" class="flex items-center space-x-2 hover:text-green-500">
+            <svg class="h-6 w-6"><use xlink:href="#icon-library"></use></svg>
+            <span>Your Library</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+  

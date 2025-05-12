@@ -1,0 +1,18 @@
+<div id="containerLogin" class="bg-black text-white p-4 flex items-center justify-between">
+  <div class="flex items-center space-x-4">
+    <img src="/spotifyWhite.svg" alt="Logo" class="h-8" />
+    <button class="btn btn-primary" (click)="login()" *ngIf="!isLogged">Iniciar Sesión</button>
+    <app-login-success *ngIf="loggingIn"></app-login-success>
+    <div class="relative" *ngIf="isLogged && !loggingIn" (click)="toggleDropdown()">
+      <img alt="Profile" class="h-8 w-8 rounded-full cursor-pointer" [src]=userProfile?.profilePic/>
+      <div class="absolute left-0 mt-2 w-48 bg-white text-black rounded shadow-lg z-10" *ngIf="showDropdown">
+        <a routerLink="/profile" class="block px-4 py-2 hover:bg-gray-200">Perfil</a>
+        <a (click)="logout()" class="block px-4 py-2 hover:bg-gray-200 hover:cursor-pointer">Cerrar Sesión</a>
+      </div>
+    </div>
+  </div>
+  <div class="flex items-center space-x-2">
+    <img src="/search.svg" alt="Search" class="h-6" />
+    <input type="text" placeholder="¿Qué quieres reproducir?" class="bg-gray-800 text-white rounded px-3 py-1 focus:outline-none" [formControl]="searchControl" />
+  </div>
+</div>

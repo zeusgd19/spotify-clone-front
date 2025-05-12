@@ -1,0 +1,73 @@
+<!-- Filtros -->
+<div class="flex gap-2 mb-8">
+  <button class="px-4 py-1 bg-white text-black rounded-full font-semibold">Todo</button>
+  <button class="px-4 py-1 bg-gray-800 text-white rounded-full hover:bg-gray-700">Canciones</button>
+  <button class="px-4 py-1 bg-gray-800 text-white rounded-full hover:bg-gray-700">Artistas</button>
+</div>
+
+<!-- Grid principal -->
+<div class="grid grid-cols-1 lg:grid-cols-[400px_1fr] gap-6 px-8 mb-14 items-start">
+  <!-- Resultado principal -->
+  <div>
+    <h2 class="text-xl font-bold text-white mb-4">Resultado principal</h2>
+    <div class="bg-gray-700 hover:bg-gray-600 p-5 rounded-lg flex flex-col gap-4">
+      <img [src]="mainArtist?.image" alt="" class="w-28 h-28 rounded-full shadow-md" (click)="goToArtist(mainArtist?.id)" />
+      <div>
+        <h3 class="text-white text-3xl font-bold leading-tight">{{ mainArtist?.name }}</h3>
+        <p class="text-neutral-400 text-md pb-4">Artista</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Canciones -->
+  <div>
+    <h2 class="text-xl font-bold text-white mb-4">Canciones</h2>
+    <ul>
+      <li *ngFor="let song of songs.slice(0, 4)" class="flex justify-between items-center py-2 hover:bg-gray-800 px-4 rounded">
+        <div class="flex items-center gap-4 w-full hover:bg-gray-600">
+          <img [src]="song.album.images[0]?.url" class="w-12 h-12 rounded" />
+          <div>
+            <p class="text-white font-medium truncate max-w-[300px] hover:cursor-pointer hover:underline" (click)="playSong(song)">{{ song.name }}</p>
+            <p class="text-gray-400 text-sm truncate">{{ mainArtist?.name }}</p>
+          </div>
+        </div>
+        <span class="text-sm text-gray-400">{{ song.duration_ms | date: "mm:ss" }}</span>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- Artistas -->
+<div class="px-8">
+  <h2 class="text-3xl font-bold text-white mb-6">Artistas</h2>
+  <div class="flex gap-6 flex-wrap">
+    <div *ngFor="let artist of artists" class="flex flex-col items-center w-48 hover:scale-105 transition-transform">
+      <ng-container *ngIf="!artist.image; else imageAvailable">
+        <div class="w-48 h-48 rounded-full mb-2 shadow-lg bg-gray-700 flex items-center justify-center">
+          <fa-icon [icon]="faUser" class="text-white text-9xl"></fa-icon>
+        </div>
+      </ng-container>
+      <ng-template #imageAvailable>
+        <img [src]="artist.image" class="w-48 h-48 rounded-full mb-3 shadow-lg object-cover" (click)="goToArtist(artist.id)" />
+      </ng-template>
+      <p class="text-white text-sm font-semibold text-center truncate">{{ artist.name }}</p>
+      <span class="text-neutral-400 text-xs">Artista</span>
+    </div>
+  </div>
+</div>
+
+<div
+  *ngIf="showLoginModal"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+>
+  <div class="bg-white rounded-lg p-6 text-center max-w-sm w-full shadow-lg">
+    <h2 class="text-xl font-bold mb-4 text-black">Debes iniciar sesión</h2>
+    <p class="mb-4 text-black">Para ver los detalles del artista, por favor inicia sesión.</p>
+    <button
+      class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+      (click)="closeModal()"
+    >
+      Cerrar
+    </button>
+  </div>
+</div>

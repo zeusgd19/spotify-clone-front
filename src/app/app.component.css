@@ -1,0 +1,32 @@
+#app {
+    display: grid;
+    grid-template-areas:
+    'profile profile profile'
+    'aside main main'
+    'play play play';
+    grid-template-columns: 200px 1fr;
+    grid-template-rows:1px 1fr 140px;
+    height: 100dvh;
+    gap: 10px;
+}
+
+app-aside {
+    grid-area: aside;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    gap: 10px;
+    transition: width 0.3s;
+}
+
+app-aside::-webkit-scrollbar {
+    display: none;
+}
+
+app-footer {
+    height: 100px;
+    grid-area: play;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}

@@ -1,1 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
+/*
+html, body {
+    display: grid;
+    height: 100%;
+    margin: 2px;
+    background-color: #000000;
+    overflow: hidden;
+}
+*/
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

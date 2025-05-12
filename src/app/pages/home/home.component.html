@@ -1,0 +1,6 @@
+<h2 class="text-2xl font-bold" *ngIf="!isLogged">Artistas Populares</h2>
+<ng-container *ngIf="!viewSongs">
+  <div class="grid mt-4 gap-4 lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1">
+    <app-artist-card *ngFor="let artist of artists" [artist]="artist" (artistClicked)="getClickedArtist($event)"></app-artist-card>
+  </div>
+</ng-container>
