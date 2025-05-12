@@ -7,8 +7,8 @@ import { HttpHeaders } from '@angular/common/http';
   providedIn: 'root'
 })
 export class SpotifyApiService {
-  private apiUrl = 'https://admin.spotifyclone.com/api'; // Your Symfony backend URL
-  private authUrl = 'https://admin.spotifyclone.com'; // Your Symfony backend URL for auth
+  private apiUrl = 'https://localhost:8000/api'; // Your Symfony backend URL
+  private authUrl = 'https://localhost:8000'; // Your Symfony backend URL for auth
   private spotifyApiUrl = 'https://api.spotify.com/v1/me'; // Your Spotify API URL
   constructor(private http: HttpClient) { }
 
