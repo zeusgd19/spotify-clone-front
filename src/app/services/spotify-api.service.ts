@@ -21,7 +21,7 @@ export class SpotifyApiService {
     const body = {
       refresh_token: token
     }
-    return this.http.post('http://localhost:8000/api/token/refresh',body);
+    return this.http.post('https://admin.spotifyclone.com/api/token/refresh',body);
   }
 
   logout(): Observable<any> {
