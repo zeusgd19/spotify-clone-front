@@ -1,15 +1,28 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import { SpotifyApiService } from '../../services/spotify-api.service';
+import {faBook, faHeart} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { SongsService } from '../../services/songs.service';
+import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
   standalone: true,
-  imports: [RouterLink]
+  imports: [RouterLink, FontAwesomeModule, CommonModule]
 })
 export class SidebarComponent {
-  constructor(private spotifyService: SpotifyApiService) {}
+  faLike = faHeart;
+  faLibrary = faBook
+  likedSongs$
+  constructor(
+    private spotifyService: SpotifyApiService,
+    private songsService: SongsService,
+    private router: Router,
+  ) {
+   this.likedSongs$ = this.songsService.likedSongs$;
+  }
 
   myPlaylists() {
     this.spotifyService.getUserPlaylists().subscribe({
@@ -29,5 +42,9 @@ export class SidebarComponent {
         }
       }
     });
+  }
+
+  goToCollection(){
+    this.router.navigate(['/collection/tracks']);
   }
 }

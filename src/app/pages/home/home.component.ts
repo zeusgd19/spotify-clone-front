@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { ArtistCardComponent } from '../../components/artist-card/artist-card.component';
 import { ArtistSongsComponent } from '../../components/artist-songs/artist-songs.component';
 import { ArtistsService } from '../../services/artists.service';
+import { SongsService } from '../../services/songs.service';
 
 @Component({
   selector: 'app-home',
@@ -28,7 +29,8 @@ export class HomeComponent implements OnInit {
     private playbackService: SpotifyPlaybackService,
     private router: Router,
     private route: ActivatedRoute,
-    private artistsService: ArtistsService
+    private artistsService: ArtistsService,
+    private songsService: SongsService
   ) {}
 
   ngOnInit() {

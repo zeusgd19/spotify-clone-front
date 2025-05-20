@@ -15,11 +15,23 @@
         </li>
         <li>
           <a routerLink="/library" class="flex items-center space-x-2 hover:text-green-500">
-            <svg class="h-6 w-6"><use xlink:href="#icon-library"></use></svg>
+            <fa-icon [icon]="faLibrary"></fa-icon>
             <span>Your Library</span>
           </a>
+          <ul>
+            <li class="flex items-center gap-2 rounded-lg hover:bg-neutral-700 transition-colors cursor-pointer mt-2 ml-0 p-1" (click)="goToCollection()">
+              <!-- Icono estilo portada -->
+              <div class="w-12 h-12 bg-gradient-to-br from-purple-600 via-purple-400 to-blue-300 flex items-center justify-center rounded shadow-lg">
+                <fa-icon [icon]="faLike" class="text-white text-xl"></fa-icon>
+              </div>
+              <!-- Información de la lista -->
+              <div>
+                <p class="text-white font-semibold text-sm">Canciones que te gustan</p>
+                <p class="text-sm text-neutral-400">Lista • {{ (likedSongs$ | async)?.length }}</p>
+              </div>
+            </li>
+          </ul>
         </li>
       </ul>
     </nav>
   </aside>
-  

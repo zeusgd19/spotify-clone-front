@@ -14,6 +14,8 @@ export class SongsService {
     private isPlayingSubject = new BehaviorSubject<boolean>(false);
     isPlaying$ = this.isPlayingSubject.asObservable();
     private _audio: HTMLAudioElement | undefined;
+    private likedSongsSubject = new BehaviorSubject<Song[]>([]);
+    likedSongs$ = this.likedSongsSubject.asObservable();
 
     private _searchedSongs: Song[] = [];
     constructor() {
@@ -26,11 +28,23 @@ export class SongsService {
         .subscribe(newPosition => {
         this.positionSubject.next(newPosition);
         });
-}
+    }
+
+    get likedSongs(){
+        return this.likedSongsSubject.value
+    }
+
+    public setLikedSongs(songs: Song[]) {
+      this.likedSongsSubject.next(songs);
+    }
+
+    set likedSongs(value: Song[]){
+        this.likedSongsSubject.next(value);
+    }
 
     setPlaybackSource(source: 'native' | 'spotify') {
         this.playbackSource = source;
-    }      
+    }
     get audio(): HTMLAudioElement | undefined {
         return this._audio;
     }
@@ -46,7 +60,7 @@ export class SongsService {
     set searchedSongs(value: Song[]) {
         this._searchedSongs = value;
     }
-    
+
       // Opcional: para acceder directamente al valor
     get position(): number {
         return this.positionSubject.value;
@@ -58,7 +72,7 @@ export class SongsService {
     get songs(): Song[] {
         return this._songs;
     }
-    
+
     set songs(value: Song[]) {
         this._songs = value;
     }

@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { HttpHeaders } from '@angular/common/http';
+import { Song } from '../interfaces/song';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SpotifyApiService {
-  private apiUrl = 'https://admin.spotifyclone.com/api'; // Your Symfony backend URL
-  private authUrl = 'https://admin.spotifyclone.com'; // Your Symfony backend URL for auth
+  private apiUrl = 'http://localhost:8000/api'; // Your Symfony backend URL
+  private authUrl = 'http://localhost:8000'; // Your Symfony backend URL for auth
   private spotifyApiUrl = 'https://api.spotify.com/v1/me'; // Your Spotify API URL
   constructor(private http: HttpClient) { }
 
@@ -21,7 +22,7 @@ export class SpotifyApiService {
     const body = {
       refresh_token: token
     }
-    return this.http.post('https://admin.spotifyclone.com/api/token/refresh',body);
+    return this.http.post('http://localhost:8000/api/token/refresh',body);
   }
 
   logout(): Observable<any> {
@@ -30,7 +31,7 @@ export class SpotifyApiService {
     'Authorization': `Bearer ${token}`
     });
     localStorage.removeItem('jwt_token');
-    return this.http.post(`${this.authUrl}/logout`,{},{ headers: headers });
+    return this.http.get(`${this.authUrl}/logout`,{ headers: headers });
   }
 
   getUserProfile(): Observable<any> {
@@ -87,5 +88,14 @@ export class SpotifyApiService {
 
   streamSong(song: string, artist: string): Observable<any> {
     return this.http.get(`${this.authUrl}/stream/${song}/${artist}`);
+  }
+
+  getMySavedTracks(): Observable<any>{
+    const token: string = localStorage.getItem('jwt_token') || '';
+    const headers: HttpHeaders = new HttpHeaders({
+    'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.get(`${this.apiUrl}/myTracks`, {headers: headers})
   }
 }

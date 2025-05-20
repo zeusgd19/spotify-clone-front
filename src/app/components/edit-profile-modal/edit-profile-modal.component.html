@@ -1,0 +1,43 @@
+<!-- edit-profile-modal.component.html -->
+<div class="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+  <div class="bg-gray-800 p-6 rounded-lg w-full max-w-md shadow-xl text-white">
+    <h3 class="text-xl font-semibold mb-4">Editar Perfil</h3>
+
+    <form (submit)="saveChanges()">
+      <!-- Nombre -->
+      <div class="mb-4">
+        <label class="text-sm text-gray-400">Nombre</label>
+        <input type="text" [(ngModel)]="user.name" name="name"
+               class="w-full mt-1 p-2 rounded bg-gray-700 text-white border border-gray-600" />
+      </div>
+
+      <!-- Correo -->
+      <div class="mb-4">
+        <label class="text-sm text-gray-400">Correo</label>
+        <input type="email" [(ngModel)]="user.email" name="email"
+               class="w-full mt-1 p-2 rounded bg-gray-700 text-white border border-gray-600" />
+      </div>
+
+      <!-- Foto -->
+      <div class="mb-4">
+        <label class="text-sm text-gray-400 block mb-1">Foto de perfil</label>
+
+        <!-- Vista previa -->
+        <div class="flex items-center gap-4">
+          <img [src]="previewUrl || user.profilePic"
+               alt="Vista previa"
+               class="w-16 h-16 rounded-full object-cover border border-gray-500" />
+
+          <input type="file" (change)="onFileSelected($event)" accept="image/*"
+                 class="text-sm text-gray-300 bg-gray-700 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-white file:bg-purple-600 hover:file:bg-purple-500" />
+        </div>
+      </div>
+
+      <!-- Botones -->
+      <div class="flex justify-end gap-2 mt-6">
+        <button type="button" (click)="closeModal()" class="px-4 py-2 bg-gray-600 rounded hover:bg-gray-500">Cancelar</button>
+        <button type="submit" class="px-4 py-2 bg-purple-600 rounded hover:bg-purple-500">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>

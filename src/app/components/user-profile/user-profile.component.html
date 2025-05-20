@@ -1,0 +1,22 @@
+<!-- profile.component.html -->
+<div class="max-w-xl mx-auto p-6 bg-gray-900 rounded-xl shadow-md text-white">
+  <div class="flex items-center gap-6">
+    <!-- Foto de perfil -->
+    <img [src]="user.profilePic" alt="Foto de perfil"
+         class="w-24 h-24 rounded-full object-cover border-2 border-purple-500 shadow-lg">
+
+    <!-- Información -->
+    <div class="flex-1">
+      <div class="flex items-center gap-2">
+        <h2 class="text-xl font-semibold">{{ user.name }}</h2>
+        <fa-icon [icon]="faPen" class="text-gray-400 cursor-pointer hover:text-white"
+                 (click)="openEditModal()"></fa-icon>
+      </div>
+      <p class="text-sm text-gray-400">{{ user.email }}</p>
+    </div>
+  </div>
+</div>
+
+<ng-container *ngIf="showModal">
+  <app-edit-profile-modal [user]="user"></app-edit-profile-modal>
+</ng-container>

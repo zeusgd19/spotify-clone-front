@@ -1,27 +1,39 @@
 <div class="bg-gradient-to-b from-gray-700 via-gray-800 to-gray-900 p-8 text-white">
   <div class="flex items-center space-x-6">
-    <img [src]="artist?.image" alt="Artist" class="w-40 h-40 rounded-full shadow-lg" />
+    <ng-container *ngIf="!isLikedSongs">
+      <img [src]="artist?.image" alt="Artist" class="w-40 h-40 rounded-full shadow-lg" />
+    </ng-container>
+    <div class="w-24 h-24 bg-gradient-to-br from-purple-600 via-purple-400 to-blue-300 flex items-center justify-center rounded shadow-lg">
+      <fa-icon [icon]="faLike" class="text-white text-3xl"></fa-icon>
+    </div>
     <div>
       <p class="flex items-center space-x-2">
+        <ng-container *ngIf="!isLikedSongs">
         <svg class="w-5 h-5 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
           <path d="M12 0L14.89 8.26H24L16.56 13.36L19.45 21.6L12 16.5L4.55 21.6L7.44 13.36L0 8.26H9.11L12 0Z"/>
         </svg>
-        <span>Artista verificado</span>
+          <span>Artista verificado</span>
+        </ng-container>
+        <span class="text-2xl">Canciones que te gustan</span>
       </p>
-      <h1 class="text-6xl font-extrabold">{{ artist?.name }}</h1>
-      <p class="text-lg mt-2 text-gray-300">100.000 oyentes mensuales</p>
+      <ng-container *ngIf="artist">
+        <h1 class="text-6xl font-extrabold">{{ artist?.name }}</h1>
+        <p class="text-lg mt-2 text-gray-300">100.000 oyentes mensuales</p>
+      </ng-container>
     </div>
   </div>
 
-  <div class="flex items-center space-x-4 mt-8">
-    <button class="bg-green-500 hover:bg-green-600 text-white text-lg font-bold px-3 py-3 rounded-full">
-      ▶
-    </button>
-    <button class="border border-white px-6 py-2 rounded-full font-semibold hover:bg-white hover:text-black transition">
-      Seguir
-    </button>
-    <button class="text-2xl">•••</button>
-  </div>
+  <ng-container *ngIf="artist">
+    <div class="flex items-center space-x-4 mt-8">
+      <button class="bg-green-500 hover:bg-green-600 text-white text-lg font-bold px-3 py-3 rounded-full">
+        ▶
+      </button>
+      <button class="border border-white px-6 py-2 rounded-full font-semibold hover:bg-white hover:text-black transition">
+        Seguir
+      </button>
+      <button class="text-2xl">•••</button>
+    </div>
+  </ng-container>
 </div>
 
 <div *ngIf="loadingSong" class="flex items-center justify-center mb-4 animate-fade">
@@ -44,7 +56,7 @@
         <p class="text-lg font-medium">Cargando canciones...</p>
       </div>
     </ng-container>
-  
+
     <ng-template #songList>
       <li *ngFor="let song of songs; let i = index"
           class="flex items-center justify-between py-3 hover:bg-gray-800 px-4 rounded"

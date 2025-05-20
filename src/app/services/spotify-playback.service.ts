@@ -16,7 +16,7 @@ export class SpotifyPlaybackService {
   private player: any;
   private deviceId: string = '';
   private token: string = '';
-  
+
   constructor(
     private spotifyApiService: SpotifyApiService,
     private songService: SongsService,
@@ -41,9 +41,9 @@ waitForSpotifySDK(token: string) {
       },
       volume: 0.5,
     });
-  
+
     this.player = player;
-  
+
     player.addListener('ready', ({ device_id }: any) => {
       this.deviceId = device_id;
       this.token = token;
@@ -54,7 +54,7 @@ waitForSpotifySDK(token: string) {
     player.addListener('initialization_error', ({ message }: any) => {
       console.error('Initialization error:', message);
     });
-  
+
      player.addListener('authentication_error', ({ message }: any) => {
       console.error('Auth error:', message);
       this.spotifyApiService.refreshToken().subscribe({
@@ -69,6 +69,11 @@ waitForSpotifySDK(token: string) {
             // Reintentar lo que falló (ej: reproducir canción actual)
             this.playCurrent(spotifyToken); // <--- asegúrate de tener esto
           });
+        },
+        error: ({ message }: any) => {
+          console.warn('Reinitializing player with new token:', message);
+          localStorage.clear()
+          window.location.reload()
         }
       });
     });
@@ -80,7 +85,7 @@ waitForSpotifySDK(token: string) {
       this.songService.position = position;
       localStorage.setItem('position', position);
     });
-  
+
     player.connect();
   }
 
@@ -137,7 +142,7 @@ waitForSpotifySDK(token: string) {
     this.songService.isPlaying = true
     this.player.resume().then(() => {
       console.log('Resumed!');
-    }) 
+    })
   }
 
   public volume(value: number) {
@@ -147,9 +152,9 @@ waitForSpotifySDK(token: string) {
   }
 
   async reinitPlayer(newToken: string) {
-  
+
     this.token = newToken;
-  
+
     this.player = new window.Spotify.Player({
       name: 'Spotify Clone',
       getOAuthToken: (cb: (token: string) => void) => {
@@ -157,16 +162,16 @@ waitForSpotifySDK(token: string) {
       },
       volume: 0.5,
     });
-  
+
     this.player.addListener('ready', ({ device_id }: any) => {
       this.deviceId = device_id;
       this.transferPlayback();
     });
-  
+
     this.player.addListener('authentication_error', ({ message }: any) => {
       console.error('Auth error:', message);
     });
-  
+
     this.player.connect();
   }
 

@@ -9,19 +9,25 @@ import { Song } from '../../interfaces/song';
 import { Router } from '@angular/router'; // Asegúrate de importar Router
 import { SpotifyPlaybackService } from '../../services/spotify-playback.service';
 import { AuthService } from '../../services/auth.service';
+import {faHeart} from '@fortawesome/free-solid-svg-icons';
+import {FaIconComponent, FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+
 
 @Component({
   selector: 'app-artist-songs',
   templateUrl: './artist-songs.component.html',
   standalone: true,
-  imports: [CommonModule, DatePipe], // Asegúrate de importar los módulos necesarios aquí
+  imports: [CommonModule, DatePipe, FaIconComponent, FontAwesomeModule], // Asegúrate de importar los módulos necesarios aquí
 })
 export class ArtistSongsComponent implements OnInit {
   artistId: string = '';
   artist: Artist | undefined = undefined; // Inicializa como un objeto vacío o con un valor predeterminado
   songs: Song[] = [];
-  isLoading: boolean = localStorage.getItem('songsLoaded') ? false : true; // Variable para controlar el estado de carga
+  isLoading: boolean = !localStorage.getItem('songsLoaded'); // Variable para controlar el estado de carga
   loadingSong: boolean = false
+  isLikedSongs: boolean = false;
+  faLike = faHeart;
+
   constructor(
     private route: ActivatedRoute,
     private artistsService: ArtistsService,
@@ -69,7 +75,7 @@ export class ArtistSongsComponent implements OnInit {
 
           // Guardar de nuevo todo el objeto
           localStorage.setItem('songsWithArtist', JSON.stringify(songsWithArtist));
-          
+
         },
         error: (error) => {
             console.error('Error fetching artist data:', error);
@@ -84,6 +90,9 @@ export class ArtistSongsComponent implements OnInit {
         this.artistId = id;
         this.getArtistData(this.artistId);
       } else {
+        this.isLikedSongs = true;
+        this.songs = this.songsService.likedSongs
+        this.isLoading = false
         console.error('Artist ID is undefined');
       }
       });
@@ -96,6 +105,8 @@ export class ArtistSongsComponent implements OnInit {
     if (this.songsService.audio) {
       this.songsService.audio.pause();
       this.songsService.audio = undefined;
+      this.songsService.position = 0;
+      this.songsService.isPlaying = false;
     }
     try {
       if(!localStorage.getItem('jwt_token')){
@@ -116,7 +127,7 @@ export class ArtistSongsComponent implements OnInit {
             const audio = e.target as HTMLAudioElement
             this.songsService.position = audio.currentTime * 1000
           })
-          
+
         } else {
           this.SpotifyPlaybackService.play(song.uri);
         }
@@ -128,6 +139,7 @@ export class ArtistSongsComponent implements OnInit {
   }
 
   navigateTo(){
-    this.router.navigate(['/']); 
+    this.router.navigate(['/']);
   }
+
 }
