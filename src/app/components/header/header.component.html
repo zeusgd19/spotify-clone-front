@@ -7,7 +7,7 @@
       <img alt="Profile" class="h-8 w-8 rounded-full cursor-pointer" [src]=userProfile?.profilePic/>
       <div class="absolute left-0 mt-2 w-48 bg-white text-black rounded shadow-lg z-10" *ngIf="showDropdown">
         <a routerLink="/profile" class="block px-4 py-2 hover:bg-gray-200">Perfil</a>
-        <a (click)="logout()" class="block px-4 py-2 hover:bg-gray-200 hover:cursor-pointer">Cerrar Sesión</a>
+        <a (click)="logout()" class="block px-4 py-2 hover:bg-gray-200 hover:cursor-pointer">Exit</a>
       </div>
     </div>
   </div>
