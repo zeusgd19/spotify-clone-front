@@ -23,7 +23,7 @@ export class HeaderComponent {
   searchQuery: string = '';
 
   constructor(
-    public auth: AuthService, 
+    public auth: AuthService,
     private spotifyService: SpotifyApiService,
     private router: Router,
     private route: ActivatedRoute
@@ -50,7 +50,7 @@ export class HeaderComponent {
   login() {
     localStorage.removeItem('popularArtists');
     this.loggingIn = true;
-    window.location.href = 'http://localhost:8000/startLogin';
+    window.location.href = 'https://admin.spotifyclone.com/startLogin';
   }
 
   logout() {
