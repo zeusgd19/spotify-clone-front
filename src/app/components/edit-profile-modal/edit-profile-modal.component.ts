@@ -1,6 +1,8 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {User} from '../../interfaces/user';
+import { supabase} from '../../supbase.client';
+
 
 @Component({
   selector: 'app-edit-profile-modal',
@@ -20,7 +22,6 @@ export class EditProfileModalComponent {
     if (input.files && input.files.length > 0) {
       this.selectedFile = input.files[0];
 
-      // Vista previa
       const reader = new FileReader();
       reader.onload = () => {
         this.previewUrl = reader.result;
@@ -29,18 +30,35 @@ export class EditProfileModalComponent {
     }
   }
 
-  saveChanges() {
-    if (this.selectedFile) {
-      // Aquí deberías subir la imagen al backend o a un storage (Firebase, S3, etc.)
-      // Por ejemplo, podrías usar FormData:
-      // const formData = new FormData();
-      // formData.append('image', this.selectedFile);
+  async saveChanges() {
+    if (!this.selectedFile) return;
+    const { data, error } = await supabase.auth.getSession();
+    console.log('session:', data?.session);
+    const file = this.selectedFile;
+    const filePath = `public/${Date.now()}_${file.name}`; // Ruta única
+    const bucket = 'avatars'; // Nombre de tu bucket en Supabase
 
-      // Por ahora, solo actualizamos la preview
-      this.user.previewUrl = this.previewUrl;
+    try {
+      // Subir la imagen
+      const { error: uploadError } = await supabase.storage
+        .from(bucket)
+        .upload(filePath, file, {
+          upsert: true,
+        });
+
+      if (uploadError) throw uploadError;
+
+      // Obtener la URL pública
+      const { data } = supabase.storage
+        .from(bucket)
+        .getPublicUrl(filePath);
+
+      this.user.profilePic = data.publicUrl;
+      console.log('Imagen subida y URL asignada:', this.user.profilePic);
+    } catch (error) {
+      console.error('Error al subir imagen a Supabase:', error);
     }
 
-    console.log('Perfil actualizado:', this.user);
     this.close.emit();
   }
 

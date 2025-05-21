@@ -110,11 +110,11 @@ export class ArtistSongsComponent implements OnInit {
     }
     try {
       if(!localStorage.getItem('jwt_token')){
-        this.songsService.audio = new Audio(`http://localhost:8000/stream/${song.name}/${song.artist.name}`);
+        this.songsService.audio = new Audio(`https://spotifyclone.one/stream/${song.name}/${song.artist.name}`);
         this.songsService.audio.play();
       } else {
         if(this.auth.userProfile.product != 'premium'){
-          this.songsService.audio = new Audio(`http://localhost:8000/stream/${this.artist!.name}/${song.name}`);
+          this.songsService.audio = new Audio(`https://spotifyclone.one/stream/${this.artist!.name}/${song.name}`);
 
           this.songsService.audio.addEventListener('canplay', e => {
               this.loadingSong = false;
@@ -129,6 +129,7 @@ export class ArtistSongsComponent implements OnInit {
           })
 
         } else {
+          this.loadingSong = false;
           this.SpotifyPlaybackService.play(song.uri);
         }
       }

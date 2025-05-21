@@ -3,9 +3,11 @@
     <ng-container *ngIf="!isLikedSongs">
       <img [src]="artist?.image" alt="Artist" class="w-40 h-40 rounded-full shadow-lg" />
     </ng-container>
-    <div class="w-24 h-24 bg-gradient-to-br from-purple-600 via-purple-400 to-blue-300 flex items-center justify-center rounded shadow-lg">
-      <fa-icon [icon]="faLike" class="text-white text-3xl"></fa-icon>
-    </div>
+    <ng-container *ngIf="isLikedSongs">
+      <div class="w-24 h-24 bg-gradient-to-br from-purple-600 via-purple-400 to-blue-300 flex items-center justify-center rounded shadow-lg">
+        <fa-icon [icon]="faLike" class="text-white text-3xl"></fa-icon>
+      </div>
+    </ng-container>
     <div>
       <p class="flex items-center space-x-2">
         <ng-container *ngIf="!isLikedSongs">
