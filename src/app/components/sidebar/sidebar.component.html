@@ -1,37 +1,72 @@
-<aside class="bg-gray-900 text-white w-64 p-4 h-full hidden md:block">
-    <nav>
-      <ul class="space-y-2">
-        <li>
-          <a routerLink="/" class="flex items-center space-x-2 hover:text-green-500">
-            <img src="/home.svg" class="h-6 w-6" />
-            <span>Home</span>
-          </a>
+<!-- Contenedor principal -->
+<div class="flex h-screen">
+
+  <!-- ASIDE redimensionable -->
+  <div id="resizableSidebar" class="bg-gray-900 text-white p-4 w-64 min-w-[180px] max-w-[400px] relative flex flex-col">
+    <!-- Navegación fija -->
+    <div>
+      <nav>
+        <ul class="space-y-2">
+          <li>
+            <a routerLink="/" class="flex items-center space-x-2 hover:text-green-500">
+              <img src="/home.svg" class="h-6 w-6" />
+              <span>Home</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/search" class="flex items-center space-x-2 hover:text-green-500" (click)="myPlaylists()">
+              <img src="/search.svg" class="h-6 w-6" />
+              <span>Search</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/library" class="flex items-center space-x-2 hover:text-green-500">
+              <fa-icon [icon]="faLibrary"></fa-icon>
+              <span>Your Library</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Playlists scrollable -->
+    <div class="overflow-y-auto flex-1 mt-4 pr-2 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900">
+      <ul class="space-y-1">
+        <!-- Canciones que te gustan -->
+        <li class="flex items-center gap-3 p-1 rounded hover:bg-neutral-800 cursor-pointer transition-colors" (click)="goToCollection()" *ngIf="songsService.isEmptyLikedSongs">
+          <div class="min-w-[48px] min-h-[48px] w-12 h-12 flex items-center justify-center rounded bg-gradient-to-br from-purple-600 via-purple-400 to-blue-300 shadow-lg">
+            <fa-icon [icon]="faLike" class="text-white text-xl"></fa-icon>
+          </div>
+          <div class="overflow-hidden">
+            <p class="text-white text-sm font-medium truncate">Canciones que te gustan</p>
+            <p class="text-neutral-400 text-xs">Lista • {{ (likedSongs$ | async)?.length }}</p>
+          </div>
         </li>
-        <li>
-          <a routerLink="/search" class="flex items-center space-x-2 hover:text-green-500" (click)="myPlaylists()">
-            <img src="/search.svg" class="h-6 w-6" />
-            <span>Search</span>
-          </a>
-        </li>
-        <li>
-          <a routerLink="/library" class="flex items-center space-x-2 hover:text-green-500">
-            <fa-icon [icon]="faLibrary"></fa-icon>
-            <span>Your Library</span>
-          </a>
-          <ul>
-            <li class="flex items-center gap-2 rounded-lg hover:bg-neutral-700 transition-colors cursor-pointer mt-2 ml-0 p-1" (click)="goToCollection()">
-              <!-- Icono estilo portada -->
-              <div class="w-12 h-12 bg-gradient-to-br from-purple-600 via-purple-400 to-blue-300 flex items-center justify-center rounded shadow-lg">
-                <fa-icon [icon]="faLike" class="text-white text-xl"></fa-icon>
-              </div>
-              <!-- Información de la lista -->
-              <div>
-                <p class="text-white font-semibold text-sm">Canciones que te gustan</p>
-                <p class="text-sm text-neutral-400">Lista • {{ (likedSongs$ | async)?.length }}</p>
-              </div>
-            </li>
-          </ul>
+
+        <!-- Listado de playlists -->
+        <li *ngFor="let playlist of playlists$ | async"
+            class="flex items-center gap-3 p-1 rounded hover:bg-neutral-800 cursor-pointer transition-colors"
+            (click)="goToCollection()">
+
+          <div class="min-w-[48px] min-h-[48px] w-12 h-12 rounded overflow-hidden bg-neutral-700 flex items-center justify-center">
+            <img [src]="playlist.image" alt="playlist cover" class="object-cover h-full w-full" *ngIf="playlist.image">
+            <fa-icon *ngIf="!playlist.image" [icon]="faMusic" class="text-white text-lg"></fa-icon>
+          </div>
+
+          <div class="overflow-hidden">
+            <p class="text-white text-sm truncate">{{ playlist.name }}</p>
+            <p class="text-neutral-400 text-xs truncate">{{ playlist.owner || 'Lista' }}</p>
+          </div>
         </li>
       </ul>
-    </nav>
-  </aside>
+    </div>
+
+    <!-- Barra de redimensionado -->
+    <div id="resizer" class="absolute top-0 right-0 w-1 cursor-col-resize h-full bg-transparent hover:bg-gray-700 transition-colors"></div>
+  </div>
+
+  <!-- Contenido principal -->
+  <div class="flex-1 bg-neutral-800">
+    <!-- Aquí va tu contenido de la app -->
+  </div>
+</div>

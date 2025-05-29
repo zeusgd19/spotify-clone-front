@@ -15,6 +15,7 @@ import { SongsService } from '../../services/songs.service';
 @Component({
   selector: 'app-search',
   imports: [CommonModule, DatePipe, FontAwesomeModule],
+  standalone: true,
   templateUrl: './search.component.html'
 })
 export class SearchComponent {
@@ -32,27 +33,43 @@ export class SearchComponent {
   artists: Artist[] = [];
   songs: Song[] = [];
   mainArtist: Artist | null = null;
+  lastSearchedQuery: string = '';
 
   showLoginModal: boolean = false;
 
   constructor(
-    private spotifyApiService: SpotifyApiService, 
+    private spotifyApiService: SpotifyApiService,
     private route: ActivatedRoute,
     private router: Router,
     private artistsService: ArtistsService,
     private songsService: SongsService,
-    private spotifyPlaybackService: SpotifyPlaybackService
+    private spotifyPlaybackService: SpotifyPlaybackService,
+    private activatedRoute: ActivatedRoute,
   ) { }
 
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
-    const query = params.get('search');
-    if (query && query.trim()) {
-      this.searchQuery = query;
-      this.search(query);
-    }
-  });
+      const query = params.get('search');
+      const option  = params.get('option');
+
+      if(option == 'artists'){
+        this.selectedOption = this.searchOptions[1];
+      } else if(option == 'tracks'){
+        this.selectedOption = this.searchOptions[2];
+      } else {
+        this.selectedOption = this.defaultOption;
+      }
+      if (query && query.trim()) {
+        this.searchQuery = query;
+
+        const alreadySearched = this.lastSearchedQuery === query && this.artists.length > 0 && this.songs.length > 0;
+        if (!alreadySearched) {
+          this.lastSearchedQuery = query;
+          this.search(query);
+        }
+      }
+    });
   }
 
   search(query: string = this.searchQuery) {
@@ -90,7 +107,8 @@ export class SearchComponent {
       this.showLoginModal = true;
       return;
     }
-    this.spotifyPlaybackService.play(song.id);
+    const position = this.songs.findIndex((findSong: Song) => findSong.uri == song.uri )
+    this.spotifyPlaybackService.play(this.songs, position);
   }
 
   goToArtist(artistId: string | undefined ) {
@@ -99,6 +117,25 @@ export class SearchComponent {
       return;
     }
     this.router.navigate(['/artist', artistId]);
+  }
+
+  showSongs(){
+    this.selectedOption = this.searchOptions[2]
+    const search = this.activatedRoute.snapshot.paramMap.get('search');
+    this.router.navigate(['search', search, 'tracks']);
+
+  }
+
+  showArtists() {
+    this.selectedOption = this.searchOptions[1]
+    const search = this.activatedRoute.snapshot.paramMap.get('search');
+    this.router.navigate(['search', search, 'artists']);
+  }
+
+  showAll() {
+    this.selectedOption = this.defaultOption
+    const search = this.activatedRoute.snapshot.paramMap.get('search');
+    this.router.navigate(['search', search, '']);
   }
 
   closeModal() {

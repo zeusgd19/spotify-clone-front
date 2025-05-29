@@ -13,7 +13,7 @@ export class AuthService {
 
   private spotifyTokenSubject = new BehaviorSubject<string | null>(null);
   public spotifyToken$ = this.spotifyTokenSubject.asObservable();
-  
+
   constructor(
     private spotifyApiService: SpotifyApiService,
     private router: Router
@@ -49,12 +49,7 @@ export class AuthService {
   logout(){
     this.logged = false;
     this.userProfile = null;
-    localStorage.removeItem('user');
-    localStorage.removeItem('userTopArtists');
-    localStorage.removeItem('popularArtists');
-    localStorage.removeItem('jwt_token');
-    localStorage.removeItem('songsWithArtist');
-    localStorage.removeItem('refresh_token');
+    localStorage.clear()
     this.spotifyApiService.logout().subscribe({
       next: () => {
         this.logged = false;

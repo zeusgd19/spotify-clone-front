@@ -16,9 +16,21 @@ export class SongsService {
     private _audio: HTMLAudioElement | undefined;
     private likedSongsSubject = new BehaviorSubject<Song[]>([]);
     likedSongs$ = this.likedSongsSubject.asObservable();
-
+    private _isEmptyLikedSongs = true;
     private _searchedSongs: Song[] = [];
     constructor() {
+
+      const savedLikedSongs = localStorage.getItem('likedSongs');
+      if (savedLikedSongs) {
+        try {
+          const songs: Song[] = JSON.parse(savedLikedSongs);
+          this._isEmptyLikedSongs = false;
+          this.likedSongsSubject.next(songs);
+        } catch (e) {
+          console.error('Error parsing likedSongs from localStorage', e);
+        }
+      } else {
+      }
             // Solo usar interval si el modo es Spotify
         combineLatest([interval(1000), this.isPlaying$])
         .pipe(
@@ -32,6 +44,10 @@ export class SongsService {
 
     get likedSongs(){
         return this.likedSongsSubject.value
+    }
+
+    get isEmptyLikedSongs(){
+      return this._isEmptyLikedSongs;
     }
 
     public setLikedSongs(songs: Song[]) {

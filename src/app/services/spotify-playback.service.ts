@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
-import { SpotifyApiService } from './spotify-api.service';
-import { SongsService } from './songs.service';
+import {Injectable} from '@angular/core';
+import {SpotifyApiService} from './spotify-api.service';
+import {SongsService} from './songs.service';
+import {Song} from '../interfaces/song';
 
 declare global {
   interface Window {
@@ -79,10 +80,20 @@ waitForSpotifySDK(token: string) {
     });
 
     player.addListener('player_state_changed', ({
-      position,
+      position, track_window
     }: any) => {
+        const track = track_window.current_track;
+        this.songService.song = {
+          id: track.id,
+          name: track.name,
+          uri: track.uri,
+          duration_ms: track.duration_ms,
+          artist: track.artists[0],
+          album: track.album
+        };
       console.log('Player state changed:', position);
       this.songService.position = position;
+      this.songService.setPlaybackSource('spotify');
       localStorage.setItem('position', position);
     });
 
@@ -100,16 +111,84 @@ waitForSpotifySDK(token: string) {
     });
   }
 
-  public play(uri: string) {
+  async play(songs: Song[], position: number) {
     this.songService.setPlaybackSource('spotify');
     this.songService.isPlaying = true
-    fetch('https://api.spotify.com/v1/me/player/play', {
-      method: 'PUT',
-      body: JSON.stringify({ uris: [uri] }),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.token}`
+    const uris = songs.map(song => song.uri);
+    const makePlayRequest = (token: string) => {
+      return fetch('https://api.spotify.com/v1/me/player/play', {
+        method: 'PUT',
+        body: JSON.stringify({
+          uris: uris,
+          offset: {
+            position: position
+          }
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+    };
+
+    makePlayRequest(this.token).then(response => {
+      if (!response.ok && response.status === 401) {
+        // Token expirado, refrescar usando subscribe
+        this.spotifyApiService.refreshToken().subscribe({
+          next: (res: any) => {
+            const newJwt = res.token;
+            localStorage.setItem('jwt_token', newJwt);
+
+            try {
+              const payloadBase64 = newJwt.split('.')[1];
+              const payload = JSON.parse(atob(payloadBase64));
+              this.token = payload.spotify_token;
+
+              // Reintentar con el nuevo token
+              this.reinitPlayer(this.token)
+              makePlayRequest(this.token).then(response => {
+                console.log(response);
+              });
+            } catch (err) {
+              console.error('Error al decodificar el nuevo JWT:', err);
+              this.spotifyApiService.logout();
+            }
+          },
+          error: (err) => {
+            console.error('Error al refrescar el token:', err);
+            this.spotifyApiService.logout();
+          }
+        });
+      } else if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
       }
+    }).catch(err => {
+      console.error('Error al reproducir la canción:', err);
+      this.spotifyApiService.refreshToken().subscribe({
+        next: (res: any) => {
+          const newJwt = res.token;
+          localStorage.setItem('jwt_token', newJwt);
+
+          try {
+            const payloadBase64 = newJwt.split('.')[1];
+            const payload = JSON.parse(atob(payloadBase64));
+            this.token = payload.spotify_token;
+
+            // Reintentar con el nuevo token
+            this.reinitPlayer(this.token)
+            makePlayRequest(this.token).then(response => {
+              console.log(response);
+            });
+          } catch (err) {
+            console.error('Error al decodificar el nuevo JWT:', err);
+            this.spotifyApiService.logout();
+          }
+        },
+        error: (err) => {
+          console.error('Error al refrescar el token:', err);
+          this.spotifyApiService.logout();
+        }
+      });
     });
 
     console.log(this.token)

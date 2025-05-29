@@ -5,6 +5,7 @@ import { SpotifyApiService } from '../../services/spotify-api.service';
 import { SongsService } from '../../services/songs.service';
 import { Song } from '../../interfaces/song';
 import { Observable } from 'rxjs';
+import {PlaylistsService} from '../../services/playlists.service';
 
 @Component({
   selector: 'app-login-success',
@@ -16,7 +17,8 @@ export class LoginSuccessComponent implements OnInit {
     private auth: AuthService,
     private spotifyService: SpotifyApiService,
     private router: Router,
-    private songsService: SongsService
+    private songsService: SongsService,
+    private playlistService: PlaylistsService
   ) {}
 
   ngOnInit(): void {
@@ -38,9 +40,17 @@ export class LoginSuccessComponent implements OnInit {
             error: (error) => console.error('Error loading profile:', error)
         });
 
+        this.spotifyService.getUserPlaylists().subscribe({
+          next: (playlists) => {
+            this.playlistService.setPlaylists(playlists.playlists)
+            localStorage.setItem('playlists', JSON.stringify(playlists.playlists));
+          }
+        })
+
         this.spotifyService.getMySavedTracks().subscribe({
           next: (response) => {
             this.songsService.setLikedSongs(response.tracks)
+            localStorage.setItem('likedSongs', JSON.stringify(response.tracks));
             console.log(this.songsService.likedSongs)
           }
         })

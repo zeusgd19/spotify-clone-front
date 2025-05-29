@@ -56,7 +56,7 @@ export class FooterComponent {
   }
 
   get currentArtist() {
-    return this.artistsService.artist;
+    return this.songsService.song.artist
   }
 
   get currentPosition() {

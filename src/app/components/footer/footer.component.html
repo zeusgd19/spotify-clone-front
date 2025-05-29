@@ -26,9 +26,9 @@
       <button class="hover:text-green-500"><fa-icon [icon]="faRedoAlt"></fa-icon></button>
     </div>
     <div class="flex items-center space-x-2 text-xs text-gray-400 w-full max-w-md">
-      <span>{{ currentSong?.duration_ms | date: "mm:ss"}}</span>
-      <input type="range" min="0" max="100" class="w-full h-1 bg-gray-600 rounded" />
       <span>{{ currentPosition | date: "mm:ss" }}</span>
+      <input type="range" min="0" max="100" class="w-full h-1 bg-gray-600 rounded" />
+      <span>{{ currentSong?.duration_ms | date: "mm:ss"}}</span>
     </div>
   </div>
 
