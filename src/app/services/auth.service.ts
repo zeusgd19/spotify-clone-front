@@ -50,7 +50,7 @@ export class AuthService {
     this.logged = false;
     this.userProfile = null;
     localStorage.clear()
-    window.location.reload();
+    window.location.href = '/'
   }
 
   refreshToken(){
