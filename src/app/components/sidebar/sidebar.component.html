@@ -46,7 +46,9 @@
         <!-- Listado de playlists -->
         <li *ngFor="let playlist of playlists$ | async"
             class="flex items-center gap-3 p-1 rounded hover:bg-neutral-800 cursor-pointer transition-colors"
-            (click)="goToCollection()">
+            [class.opacity-50]="loadingPlaylist"
+            [class.pointer-events-none]="loadingPlaylist"
+            (click)="goToPlaylist(playlist)">
 
           <div class="min-w-[48px] min-h-[48px] w-12 h-12 rounded overflow-hidden bg-neutral-700 flex items-center justify-center">
             <img [src]="playlist.image" alt="playlist cover" class="object-cover h-full w-full" *ngIf="playlist.image">
@@ -59,6 +61,15 @@
           </div>
         </li>
       </ul>
+
+      <!-- Spinner de carga -->
+      <div *ngIf="loadingPlaylist" class="flex items-center justify-center py-4">
+        <svg class="w-6 h-6 animate-spin text-green-500" viewBox="0 0 24 24" fill="none">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+        </svg>
+        <span class="ml-2 text-sm text-white">Cargando playlist...</span>
+      </div>
     </div>
 
     <!-- Barra de redimensionado -->

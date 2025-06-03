@@ -11,6 +11,8 @@ import { SpotifyPlaybackService } from '../../services/spotify-playback.service'
 import { AuthService } from '../../services/auth.service';
 import {faHeart} from '@fortawesome/free-solid-svg-icons';
 import {FaIconComponent, FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import {PlaylistsService} from '../../services/playlists.service';
+import {Playlist} from '../../interfaces/playlist';
 
 
 @Component({
@@ -27,6 +29,8 @@ export class ArtistSongsComponent implements OnInit {
   loadingSong: boolean = false
   isLikedSongs: boolean = false;
   faLike = faHeart;
+  isPlaylist: boolean = false;
+  playlist: Playlist = {} as Playlist;
 
   constructor(
     private route: ActivatedRoute,
@@ -35,7 +39,8 @@ export class ArtistSongsComponent implements OnInit {
     private router: Router,
     private SpotifyPlaybackService: SpotifyPlaybackService, // Asegúrate de importar tu servicio de SpotifyPlaybackService
     private songsService: SongsService, // Asegúrate de importar tu servicio de canciones // Asegúrate de importar tu servicio de artistas
-    private auth: AuthService
+    private auth: AuthService,
+    private playlistService: PlaylistsService
   ) {}
   getArtistData(id: string) {
 
@@ -84,18 +89,26 @@ export class ArtistSongsComponent implements OnInit {
   }
   }
   ngOnInit() {
+    const url = this.router.url;
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       if (id) { // Verifica que el ID se esté obteniendo correctamente
-        this.artistId = id;
-        this.getArtistData(this.artistId);
+        if(url.startsWith('artist')) {
+          this.artistId = id;
+          this.getArtistData(this.artistId);
+        } else {
+          this.isPlaylist = true
+          this.songs = this.playlistService.playlistTracks
+          this.playlist = this.playlistService.getPlaylistById(id);
+          this.isLoading = false
+        }
       } else {
         this.isLikedSongs = true;
         this.songs = this.songsService.likedSongs
         this.isLoading = false
         console.error('Artist ID is undefined');
       }
-      });
+    });
   }
 
   playSong(song: Song) {

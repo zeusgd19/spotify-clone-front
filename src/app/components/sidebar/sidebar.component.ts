@@ -8,6 +8,7 @@ import {CommonModule} from '@angular/common';
 import {Song} from '../../interfaces/song';
 import {isEmpty, Observable} from 'rxjs';
 import {PlaylistsService} from '../../services/playlists.service';
+import {Playlist} from '../../interfaces/playlist';
 
 @Component({
   selector: 'app-sidebar',
@@ -20,6 +21,7 @@ export class SidebarComponent {
   faLibrary = faBook
   likedSongs$
   playlists$
+  loadingPlaylist: boolean = false;
   constructor(
     private spotifyService: SpotifyApiService,
     protected songsService: SongsService,
@@ -78,6 +80,23 @@ export class SidebarComponent {
   goToCollection(){
     this.router.navigate(['/collection/tracks']);
   }
+
+  goToPlaylist(playlist: Playlist) {
+    this.loadingPlaylist = true;
+
+    this.spotifyService.getPlaylistTracks(playlist.id).subscribe({
+      next: ({ tracks }) => {
+        this.playlistService.playlistTracks = tracks;
+        this.loadingPlaylist = false;
+        this.router.navigate(['/playlist', playlist.id]);
+      },
+      error: (err) => {
+        console.error('Error al cargar playlist', err);
+        this.loadingPlaylist = false;
+      }
+    });
+  }
+
 
   protected readonly faMusic = faMusic;
   protected readonly isEmpty = isEmpty;

@@ -8,9 +8,10 @@ import {UserProfileComponent} from './components/user-profile/user-profile.compo
 export const routes: Routes = [
     { path: 'login-success', component: LoginSuccessComponent },
     { path: 'artist/:id', component: ArtistSongsComponent },
+    { path: 'playlist/:id', component: ArtistSongsComponent },
+    { path: 'collection/tracks', component: ArtistSongsComponent },
     { path: 'search/:search', component: SearchComponent },
     { path: 'search/:search/:option', component: SearchComponent },
     { path: '', component: HomeComponent },
-    { path: 'collection/tracks', component: ArtistSongsComponent },
     { path: 'profile', component: UserProfileComponent }
 ];

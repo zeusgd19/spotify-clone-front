@@ -8,8 +8,8 @@ import { Song } from '../interfaces/song';
   providedIn: 'root'
 })
 export class SpotifyApiService {
-  private apiUrl = 'https://admin.spotifyclone.shop/api'; // Your Symfony backend URL
-  private authUrl = 'https://admin.spotifyclone.shop'; // Your Symfony backend URL for auth
+  private apiUrl = 'http://localhost:8000/api'; // Your Symfony backend URL
+  private authUrl = 'http://localhost:8000'; // Your Symfony backend URL for auth
   private spotifyApiUrl = 'https://api.spotify.com/v1/me'; // Your Spotify API URL
   constructor(private http: HttpClient) { }
 
@@ -22,7 +22,7 @@ export class SpotifyApiService {
     const body = {
       refresh_token: token
     }
-    return this.http.post('https://admin.spotifyclone.shop/api/token/refresh',body);
+    return this.http.post('http://localhost:8000/api/token/refresh',body);
   }
 
   logout(): Observable<any> {
@@ -75,7 +75,7 @@ export class SpotifyApiService {
   }
 
   getPlaylistTracks(playlistId: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/playlists/${playlistId}/tracks`);
+    return this.http.get(`${this.apiUrl}/playlist/${playlistId}/tracks`);
   }
 
   getArtistTracks(artistId: string): Observable<any> {
