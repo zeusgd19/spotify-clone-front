@@ -50,16 +50,7 @@ export class AuthService {
     this.logged = false;
     this.userProfile = null;
     localStorage.clear()
-    this.spotifyApiService.logout().subscribe({
-      next: () => {
-        this.logged = false;
-        this.userProfile = null;
-        window.location.reload();
-      },
-      error: (err) => {
-        console.error('Error al cerrar sesión:', err);
-      }
-    });
+    window.location.reload();
   }
 
   refreshToken(){
