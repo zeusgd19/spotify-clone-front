@@ -33,7 +33,7 @@
     <div class="overflow-y-auto flex-1 mt-4 pr-2 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900">
       <ul class="space-y-1">
         <!-- Canciones que te gustan -->
-        <li class="flex items-center gap-3 p-1 rounded hover:bg-neutral-800 cursor-pointer transition-colors" (click)="goToCollection()" *ngIf="songsService.isEmptyLikedSongs">
+        <li class="flex items-center gap-3 p-1 rounded hover:bg-neutral-800 cursor-pointer transition-colors" (click)="goToCollection()">
           <div class="min-w-[48px] min-h-[48px] w-12 h-12 flex items-center justify-center rounded bg-gradient-to-br from-purple-600 via-purple-400 to-blue-300 shadow-lg">
             <fa-icon [icon]="faLike" class="text-white text-xl"></fa-icon>
           </div>

@@ -93,7 +93,7 @@ export class ArtistSongsComponent implements OnInit {
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       if (id) { // Verifica que el ID se esté obteniendo correctamente
-        if(url.startsWith('artist')) {
+        if(url.startsWith('/artist')) {
           this.artistId = id;
           this.getArtistData(this.artistId);
         } else {
