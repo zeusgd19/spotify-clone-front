@@ -50,7 +50,7 @@ export class HeaderComponent {
   login() {
     localStorage.removeItem('popularArtists');
     this.loggingIn = true;
-    window.location.href = 'spotifyclone.vps.webdock.cloud/startLogin';
+    window.location.href = 'http://http://spotifyclone.vps.webdock.cloud/startLogin';
   }
 
   logout() {
