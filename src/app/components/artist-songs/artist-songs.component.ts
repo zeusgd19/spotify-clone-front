@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Artist } from '../../interfaces/artist'; // tu interfaz de artista
 import  { ArtistsService } from '../../services/artists.service'; // tu servicio de artistas
@@ -123,11 +123,11 @@ export class ArtistSongsComponent implements OnInit {
     }
     try {
       if(!localStorage.getItem('jwt_token')){
-        this.songsService.audio = new Audio(`https://admin.spotifyclone.shop/stream/${song.name}/${song.artist.name}`);
+        this.songsService.audio = new Audio(`https://spotifyclone.vps.webdock.cloud/stream/${song.name}/${song.artist.name}`);
         this.songsService.audio.play();
       } else {
         if(this.auth.userProfile.product != 'premium'){
-          this.songsService.audio = new Audio(`https://admin.spotifyclone.shop/stream/${this.artist!.name}/${song.name}`);
+          this.songsService.audio = new Audio(`https://spotifyclone.vps.webdock.cloud/stream/${this.artist!.name}/${song.name}`);
 
           this.songsService.audio.addEventListener('canplay', e => {
               this.loadingSong = false;
